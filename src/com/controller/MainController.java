@@ -56,8 +56,12 @@ public class MainController {
 	      mv.setViewName("led_check");
 	      client.send("led","led_"+LED );
 	      return mv;
-	   }
-	
+	}
+	public ModelAndView button_show(String request) {
+		//String button = request.getBytes("button");// 어떤 형식으로 값을 받아와야 하지?..
+		ModelAndView mv = new ModelAndView();
+		return mv;
+	}
 	
 	@RequestMapping("/iot1.mc")
 	@ResponseBody
