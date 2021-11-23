@@ -45,21 +45,34 @@ public class MainController {
 		client = new MyMqtt_Pub_client();
 	}
 	
-	@RequestMapping("/led.mc")
-	public ModelAndView led_show(HttpServletRequest request) {
+	   @RequestMapping("/led.mc")
+	   public ModelAndView led_show(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	      ModelAndView mv = new ModelAndView();
 	      String LED = request.getParameter("LED");
 	      System.out.println(LED);
 	      data_log.debug(LED);
-	      ModelAndView mv = new ModelAndView();
 	      HttpSession session = request.getSession();
 	      session.setAttribute("status", LED);
+	      
 	      mv.setViewName("led_check");
 	      client.send("led","led_"+LED );
+	      
+	      //PrintWriter out = response.getWriter();
+	      String temp = request.getParameter("temp");
+//	      double f_temp = Double.parseDouble(temp);
+	      //System.out.println(f_temp);
+	      System.out.println(temp);
+	      //work_log.debug(f_temp);
 	      return mv;
-	}
-	public ModelAndView button_show(String request) {
-		//String button = request.getBytes("button");// 어떤 형식으로 값을 받아와야 하지?..
+	   }
+
+	@RequestMapping("/btn.mc")
+	
+	public ModelAndView btn(HttpServletRequest request) throws IOException{
 		ModelAndView mv = new ModelAndView();
+		String btn = request.getParameter("temp");
+		mv.setViewName("led_check");
+		System.out.println("button=>"+btn);
 		return mv;
 	}
 	

@@ -19,6 +19,15 @@ else if(document.btn_off.public.clicked)
    }
   
 } 
+<link href="common.css" rel="stylesheet" type="text/css">
+<style>
+body{background-color: #F7FFF5;}
+img.absolute{
+	postion: absolute;
+	left:700;
+	top: 50px;
+}
+</style>
 </script>
 </head>
 <body>
@@ -37,13 +46,15 @@ else if(document.btn_off.public.clicked)
    <h1>led_status : ${status}</h1>
 		<c:choose>
 		<c:when test= "${status eq 'on'}">
-			<li><img src="/hp/img/led_on.png"></li>
+			<li><img src="/hp/web/img/led_on.png"></li>
 			</c:when>
 		<c:otherwise>
-			<li><img src="/hp/img/led_off.png"></li>
+			<li><img src="/hp/web/img/led_off.png"></li>
 		</c:otherwise>
 		</c:choose> 
 		</div>
-		
+		<div>	
+		<img src="/img/led_on" class="absolute">
+		</div>
 </body>
 </html>
