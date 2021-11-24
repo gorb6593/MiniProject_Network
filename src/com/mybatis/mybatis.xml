@@ -6,11 +6,15 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	<typeAliases>
 		<typeAlias type="com.vo.UserVO" alias="user"/>
 	    <typeAlias type="com.vo.Product" alias="product"/>
+	    <typeAlias type="com.vo.LedVO" alias="led"/>
+	    <typeAlias type="com.vo.BtnVO" alias="btn"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="com/mybatis/usermapper.xml"/>
 		<mapper resource="com/mybatis/productmapper.xml"/>
+		<mapper resource="com/mybatis/ledmapper.xml"/>
+		<mapper resource="com/mybatis/btnmapper.xml"/>
 	</mappers>
 </configuration>
 

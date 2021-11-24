@@ -35,7 +35,6 @@ public class MyMqtt_Pub_client {
 				client.close(); 
 			} 
 		} catch (MqttException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		

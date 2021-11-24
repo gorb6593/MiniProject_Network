@@ -12,12 +12,16 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.frame.Service;
+import com.vo.BtnVO;
+import com.vo.LedVO;
 import com.vo.UserVO;
 
 @Controller
@@ -32,8 +36,39 @@ public class MainController {
 			Logger.getLogger("data"); 
 	
 	
-	@Resource(name="uservice")
+	@Autowired
+	@Qualifier("uservice")
 	Service<String, UserVO> service;
+	
+	@Autowired
+	@Qualifier("ledservice")
+	Service<String, LedVO> service2;
+	
+	@Autowired
+	@Qualifier("btnservice")
+	Service<String, BtnVO> service3;
+	
+	@RequestMapping("/ledonadd.mc")
+	public String ledonimpl(LedVO led) {			
+		System.out.println("onadd컨트롤러?");
+		try {
+			service2.register(led);
+			System.out.println("onadd컨트롤러에서넘어왔니?");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:led.mc?LED=on";
+	}
+	
+	@RequestMapping("/ledoffadd.mc")
+	public String ledoffimpl(LedVO led) {
+		try {
+		service2.register(led);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "redirect:led.mc?LED=off";
+	}
 	
 	@RequestMapping("/main.mc")
 	public ModelAndView main() {
@@ -58,23 +93,55 @@ public class MainController {
 	      client.send("led","led_"+LED );
 	      
 	      //PrintWriter out = response.getWriter();
-	      String temp = request.getParameter("temp");
+//	      String temp = request.getParameter("temp");
 //	      double f_temp = Double.parseDouble(temp);
 	      //System.out.println(f_temp);
-	      System.out.println(temp);
 	      //work_log.debug(f_temp);
+//	      String btn = request.getParameter("btn");
+//	      System.out.println("temp: "+temp+"btn: "+btn);
 	      return mv;
 	   }
 
-	@RequestMapping("/btn.mc")
-	
-	public ModelAndView btn(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView();
-		String btn = request.getParameter("temp");
-		mv.setViewName("led_check");
-		System.out.println("button=>"+btn);
-		return mv;
-	}
+	   @RequestMapping("/btn.mc")
+		public ModelAndView btn(HttpServletRequest request) throws IOException{
+		   	
+//		   	service3.register(BTN);
+			String btn = request.getParameter("btn");
+			int i_btn = Integer.parseInt(btn);
+			BtnVO btninfo = new BtnVO(i_btn);
+			try {
+				service3.register(btninfo);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			System.out.println("Button Status : "+btn);
+			String temp = request.getParameter("temp");
+			double f_temp = Double.parseDouble(temp);
+			System.out.println("Temp Status : "+temp+"ºC");
+			ModelAndView mv = new ModelAndView();
+			HttpSession session = request.getSession();
+			session.setAttribute("btn", btn);
+			mv.addObject("btn", btn);
+			session.setAttribute("temp", temp);
+			mv.addObject("temp", temp);
+			mv.setViewName("ledtest/led_check");
+			if(btn!=null) { 
+				if(btn.equals(1+"")) { 
+					try {
+						FcmUtil_btn.sendServer(btn); 
+						} catch (Exception e) {
+							e.printStackTrace(); 
+							}
+						}else if(f_temp >= 28 ) { 
+							try {
+								FcmUtil_temp.sendServer(temp); 
+								} catch (Exception e) {
+									e.printStackTrace(); 
+									}
+								}  
+				}
+			return mv;
+		}
 	
 	@RequestMapping("/iot1.mc")
 	@ResponseBody
